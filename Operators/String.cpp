@@ -10,21 +10,21 @@ String::String()
 	length = 0;
 }
 
-String::String(char *str)
+String::String(const char *str)
 {
 	s = 0;								// Always initialize
 	length = 0;
 	initCopy(str);
 }
     
-String::String(String& string)
+String::String(const String& string)
 {
 	s = 0;								
 	length = 0;
 	initCopy(string.s);
 }
     
-String::String(String *st)
+String::String(const String *st)
 {
 	s = 0;								
 	length = 0;
@@ -50,7 +50,7 @@ String::~String()
 		}
 }
 
-void String::initCopy(char *str)
+void String::initCopy(const char *str)
 {
 	if (str)
 		{
@@ -67,7 +67,7 @@ void String::clear()
 }
 
        
-long String::ln()
+long String::ln() const
 {
 	long l = 0;
 	if (s)
@@ -76,14 +76,14 @@ long String::ln()
 	return l;
 }       
        
-void String::stncpy(char *dest, char *src, long n)
+void String::stncpy(char *dest, const char *src, long n)
 {
 	if (dest && src)
 		while ((n-- > 0) && (*dest++ = *src++))
 			;
 }
   
-void String::copy(char *str)
+void String::copy(const char *str)
 {
 	if (s && str)
 		stncpy(s, str, length - 1);
@@ -101,7 +101,7 @@ void String::create(long l)
 	clear();
 }
 
-void String::prt(FILE *f)
+void String::prt(FILE *f) const
 {
 	if (s)
 		fprintf(f, "<%s>\n", s);
@@ -109,7 +109,7 @@ void String::prt(FILE *f)
 		fprintf(f, "<>\n");
 } 
 
-long String::strLen(char *t)
+long String::strLen(const char *t)
 {
 	long ret = 0;
 
@@ -120,7 +120,7 @@ long String::strLen(char *t)
 	return ret;
 }
 
-void String::setTo(char *t)
+void String::setTo(const char *t)
 {
 	if (t)
 		{
@@ -139,12 +139,12 @@ void String::setTo(char *t)
 
 // Operators
 
-String& String::operator<<(String &s)
+String& String::operator<<(const String &s)
 {
     return (*this) << s.s;
 }
 
-String& String::operator<<(char *s)
+String& String::operator<<(const char *s)
 {
     if (!s) {
         return *this;
@@ -153,7 +153,7 @@ String& String::operator<<(char *s)
     long totalLn = this->ln() + sLn;
     if (totalLn < this->length) {
         char* to = this->s + ln();
-        char* from = s;
+        const char* from = s;
         stncpy(to, from, sLn);
     } else {
         char* old = this->s;
@@ -161,7 +161,7 @@ String& String::operator<<(char *s)
         stncpy(this->s, old, length);
         delete [] old;
         char* to = this->s + ln();
-        char* from = s;
+        const char* from = s;
         stncpy(to, from, sLn + 1);
     }
     return *this;
@@ -174,13 +174,13 @@ String& String::operator<<(char c)
     return * this << sc;
 }
 
-String& String::operator=(String &s)
+String& String::operator=(const String &s)
 {
     (*this) = s.s;
     return *this;
 }
 
-String& String::operator=(char* s)
+String& String::operator=(const char* s)
 {
     setTo(s);
     return *this;
