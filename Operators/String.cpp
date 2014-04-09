@@ -141,27 +141,7 @@ void String::setTo(char *t)
 
 String& String::operator<<(String &s)
 {
-    if (!s.s) {
-        return *this;
-    }
-    long sLn = s.ln();
-    long totalLn = this->ln() + s.ln();
-    if (totalLn < this->length) {
-        char* to = this->s + ln();
-        char* from = s.s;
-        do {
-            *to++ = *from;
-        } while (*from++ != 0);
-    } else {
-        char* old = this->s;
-        create(totalLn);
-        stncpy(this->s, old, length);
-        delete [] old;
-        char* to = this->s + ln();
-        char* from = s.s;
-        stncpy(to, from, sLn + 1);
-    }
-    return *this;
+    return (*this) << s.s;
 }
 
 String& String::operator<<(char *s)
@@ -174,9 +154,7 @@ String& String::operator<<(char *s)
     if (totalLn < this->length) {
         char* to = this->s + ln();
         char* from = s;
-        do {
-            *to++ = *from;
-        } while (*from++ != 0);
+        stncpy(to, from, sLn);
     } else {
         char* old = this->s;
         create(totalLn);
@@ -191,39 +169,28 @@ String& String::operator<<(char *s)
 
 String& String::operator<<(char c)
 {
-    long l = ln();
-    if (l + 1 < length) {
-        s[l] = c;
-        s[l + 1] = 0;
-    } else {
-        char* old = this->s;
-        create(l + 1);
-        stncpy(this->s, old, length);
-        delete [] old;
-        this->s[length-2] = c;
-    }
-    return * this;
+    char sc[] = " ";
+    sc[0] = c;
+    return * this << sc;
 }
 
 String& String::operator=(String &s)
 {
-    delete [] this->s, this->s = 0, length = 0;
-    initCopy(s.s);
+    (*this) = s.s;
     return *this;
 }
 
 String& String::operator=(char* s)
 {
-    delete [] this->s, this->s = 0, length = 0;
-    initCopy(s);
+    setTo(s);
     return *this;
 }
 
 String& String::operator=(char c)
 {
-    delete [] this->s, this->s = 0, length = 0;
-    create(1);
-    this->s[0] = c;
+    char sc[] = " ";
+    sc[0] = c;
+    operator=(sc);
     return *this;
 }
           
